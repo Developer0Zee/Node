@@ -36,11 +36,18 @@ const validate = (req, res, next) => {
   const { firstName, lastName, hobby } = req.body;
 
   if (
-    typeof firstName != "string" ||
-    lastName != "string" ||
-    hobby != "string"
+     !firstName  ||
+    !lastName  ||
+    !hobby 
   ) {
-    return res.status(400).send("Please enter values in strings");
+    return res.status(400).send("Please enter all values in strings");
+  }
+  if (
+    typeof firstName !== "string" ||
+    typeof lastName !== "string" ||
+    typeof hobby !== "string"
+  ) {
+    return res.status(400).send("All fields must be of type string.");
   }
   next();
 };
@@ -79,7 +86,7 @@ app.put("/user/:id", validate, (req, res) => {
   const userID = req.params.id;
 
   if (Object.keys(req.body).length === 0) {
-    return res.status(404).json({ message: "No fiels to update" });
+    return res.status(404).json({ message: "No feilds to update" });
   }
 
   const editUser = userData.find((user) => user.id == userID);
