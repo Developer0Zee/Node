@@ -1,9 +1,14 @@
+
+//exporting express
 import express from "express";
 
+//creating an app instance using express
 const app = express();
 
+//middleware to parse data from body in json format
 app.use(express.json());
 
+// middle to show method status code and url
 app.use((req, res, next) => {
   res.on("finish",()=>{
     console.log(`${req.method} ${req.url}-${req.statusCode}`);
@@ -11,6 +16,7 @@ app.use((req, res, next) => {
   next();
 });
 
+//storing data using local array 
 let userData = [
   {
     id: "1",
@@ -31,7 +37,7 @@ let userData = [
     hobby: "teaching",
   },
 ];
-
+// another middleware to validate the inputs by user
 const validate = (req, res, next) => {
   const { firstName, lastName, hobby } = req.body;
 
@@ -52,10 +58,12 @@ const validate = (req, res, next) => {
   next();
 };
 
+// api to get all users
 app.get("/users", (req, res) => {
   res.send(userData);
 });
 
+// api to get specific user
 app.get("/users/:id", (req, res) => {
   const userID = req.params.id;
 
@@ -68,6 +76,7 @@ app.get("/users/:id", (req, res) => {
   res.status(200).send(user);
 });
 
+//adding new user and sharing it to server using post
 app.post("/user", validate, (req, res) => {
   const { id, firstName, lastName, hobby } = req.body;
 
@@ -82,6 +91,7 @@ app.post("/user", validate, (req, res) => {
   res.status(201).send(userData);
 });
 
+// updating the existing user using post
 app.put("/user/:id", validate, (req, res) => {
   const userID = req.params.id;
 
@@ -104,6 +114,7 @@ app.put("/user/:id", validate, (req, res) => {
   res.send(userData);
 });
 
+// deleting user using delete method
 app.delete("/user/:id", (req, res) => {
   const userID = req.params.id;
   const initialLength = userData.length;
